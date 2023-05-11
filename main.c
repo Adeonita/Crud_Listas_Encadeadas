@@ -40,15 +40,30 @@ List* create()
 
 void insert(List* list, Client client)
 {
+    ListNode *ant = NULL;
+    ListNode *p = list->first;
     ListNode* node = (ListNode*) malloc(sizeof(ListNode));
+    
+
+    while (p != NULL)
+    {
+        ant = p;
+        p = p->next;
+    }
     
     client.active = 1;
     client.id = list->totalElements;
 
     node->client = client;
-    node->next = list->first; //Seta o fim da lista, atribuindo null a última posição do ponteiro na primeira atribuição
-   
-    list->first = node;
+
+    if (ant == NULL) {
+        node->next = list->first; //Seta o fim da lista, atribuindo null a última posição do ponteiro na primeira atribuição
+        list->first = node;
+    } else {
+        node->next = ant->next;
+        ant->next = node;
+    }
+    
     list->totalElements ++;
     
     return;
