@@ -56,10 +56,6 @@ void insert(List* list, Client client)
 
 void getAll(List* list)
 {
-    if (list->totalElements == 0) {
-        printWithLine("O banco de dados não possui registro");
-    }
-
     for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
     {
         printf("Id: %d ", ln->client.id);
@@ -73,13 +69,6 @@ void getAll(List* list)
 
 void get(List* list, int id)
 {
-    if (id > list->totalElements || id < 0)
-    {
-        notFound("Id");
-
-        return;
-    }
-
     for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
     {
         if (ln->client.id == id) {
@@ -171,8 +160,9 @@ void loadFile(List *database)
 
 void menu()
 {
-    int resp = 0;
     int id;
+    int resp = 0;
+
     Client client; 
     List* database = create();
 
@@ -258,7 +248,9 @@ void menu()
 
             case 7:
                 printWithLine("Carregando registros do banco de dados...");
+
                 loadFile(database);
+                
                 sleep(5);
                 printWithLine("Registros carregados em memória com sucesso!");
                 break; 
