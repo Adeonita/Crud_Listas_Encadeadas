@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "helpers.h"
+
 #define DATABASE './database.txt'
 
 typedef struct list List;
@@ -34,11 +36,6 @@ List* create()
     list->totalElements = 0;
 
     return list;
-}
-
-void printWithLine(char text[500])
-{
-    printf("\n\n %s \n\n", text);
 }
 
 void insert(List* list, Client client)
@@ -78,7 +75,7 @@ void get(List* list, int id)
 {
     if (id > list->totalElements || id < 0)
     {
-        printWithLine("Id Not Found");
+        notFound("Id");
 
         return;
     }
@@ -111,11 +108,6 @@ void update(List* list, int id, Client client)
 
 void save(List* list)
 {
-    if (list->totalElements == 0) {
-        printWithLine("Não há registros para serem gravados no banco de dados");
-        
-        return;
-    }
 
     FILE *fptr;
 
@@ -152,7 +144,7 @@ void loadFile(List *database)
     fptr = fopen(DATABASE, "r");
 
     if (fptr == NULL) {
-        printWithLine("File Not Found");
+        notFound("File");
         exit(1);
     }
 
@@ -174,6 +166,8 @@ void loadFile(List *database)
 
     fclose(fptr);
 }
+
+
 
 void menu()
 {
@@ -203,8 +197,8 @@ void menu()
 
             case 2:
                 if (database->first == NULL) {
-                    printWithLine("Impossivel atualizar. O banco de dados não possui registros armazenados");
-                    
+
+                    emptyDatabaseMessage("atualizar");                    
                     break;
                 }
 
@@ -212,7 +206,7 @@ void menu()
                 scanf("%d", &id);
 
                 if (id < 0 || id > database->totalElements) {
-                    printWithLine("Id Not Found");
+                    notFound("Id");
 
                     break;;
                 }
@@ -227,13 +221,24 @@ void menu()
                 break;
 
             case 3:
+                if (database->first == NULL) {
+                    emptyDatabaseMessage("consultar");
+                    break;
+                }
+
                 printf("Insira o Id do usuário a ser consultado: ");
-                scanf("%d", &id);
+                scanf("%d", &id);     
 
                 get(database, id);
                 break;
 
             case 4:
+                if (database->first == NULL) {
+                    emptyDatabaseMessage("consultar");
+                    
+                    break;
+                }
+        
                 getAll(database);
                 break;
 
@@ -242,6 +247,12 @@ void menu()
                 break;  
 
             case 6:
+                if (database->first == NULL) {
+                    printWithLine("Não há registros para serem gravados no banco de dados");
+                    
+                    break;;
+                }
+
                 save(database);
                 break;
 
