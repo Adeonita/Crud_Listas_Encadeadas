@@ -41,14 +41,14 @@ List* create()
 void insert(List* list, Client client)
 {
     ListNode *ant = NULL;
-    ListNode *p = list->first;
+    ListNode *first = list->first;
     ListNode* node = (ListNode*) malloc(sizeof(ListNode));
     
 
-    while (p != NULL)
+    while (first != NULL)
     {
-        ant = p;
-        p = p->next;
+        ant = first;
+        first = first->next;
     }
     
     client.active = 1;
