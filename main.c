@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 #include "helpers.h"
 
-#define DATABASE './database.txt'
+#define DATABASE "./database.txt"
 
 typedef struct list List;
 typedef struct client Client;
@@ -11,7 +12,7 @@ struct client
 {
     int id;
     int age;
-    char name; //com array ta dando xabu na atualização
+    char name[10]; //com array ta dando xabu na atualização
     int active;
 };
 
@@ -59,7 +60,7 @@ void getAll(List* list)
     for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
     {
         printf("Id: %d ", ln->client.id);
-        printf("Nome: %c ", ln->client.name);
+        printf("Nome: %s ", ln->client.name);
         printf("Idade: %d ", ln->client.age);
         printf("\n");
     }
@@ -74,7 +75,7 @@ void get(List* list, int id)
         if (ln->client.id == id) {
             printf("\n\n");
             printf("Id: %d ", ln->client.id);
-            printf("Nome: %c ", ln->client.name);
+            printf("Nome: %s ", ln->client.name);
             printf("Idade: %d", ln->client.age);
             printf("\n\n");
         }  
@@ -89,7 +90,7 @@ void update(List* list, int id, Client client)
     {
         if (ln->client.id == id) {
             ln->client.id = id;
-            ln->client.name = client.name;
+            strcpy(ln->client.name, client.name);
             ln->client.age = client.age;
         }  
     }
@@ -102,17 +103,24 @@ void save(List* list)
 
     fptr = fopen(DATABASE, "w");
 
+    if (fptr == NULL) {
+        if (fptr == NULL) {
+            notFound("File");
+            exit(1);
+        }
+        exit(1);
+    }
+
     for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
     {
         printf("Id: %d ", ln->client.id);
-        printf("Nome: %c ", ln->client.name);
+        printf("Nome: %s ", ln->client.name);
         printf("Age: %d ", ln->client.age);
         printf("Active: %d ", ln->client.active);
         printf("\n");
 
         if (ln->client.active == 1) {
-            // fprintf(fptr, "%d %s %d %d \n", lança falha de segmentação
-            fprintf(fptr, "%d %c %d %d \n", 
+            fprintf(fptr, "%d %s %d %d \n",
                 ln->client.id, 
                 ln->client.name,
                 ln->client.age,
