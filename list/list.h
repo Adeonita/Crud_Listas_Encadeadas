@@ -80,42 +80,37 @@ ListNode* get(List* list, int id)
     return node;
 }
 
-ListNode* getToUpdate(List* list, int id)
+ListNode* getAndUpdate(List* list, int id, Client client)
+{
+    printf("Old: ");
+    ListNode* node = get(list, id);
+
+    node->client.id = id;
+    strcpy(node->client.name, client.name);
+    node->client.age = client.age;
+
+    printf("\nUpdated: ");
+    get(list, id);
+
+    return node;
+}
+
+ListNode* update(List* list, int id, Client client)
 {
     ListNode* node;
 
     for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
     {
         if (ln->client.id == id) {
+            ln->client.id = id;
+            strcpy(ln->client.name, client.name);
+            ln->client.age = client.age;
 
             node = ln;
         }  
     }
 
     return node;
-}
-
-void getAndUpdate(List* list, int id, Client client)
-{
-    ListNode* node = getToUpdate(list, id);
-
-    node->client.id = id;
-    strcpy(node->client.name, client.name);
-    node->client.age = client.age;
-
-    return;
-}
-
-void update(List* list, int id, Client client)
-{
-    for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
-    {
-        if (ln->client.id == id) {
-            ln->client.id = id;
-            strcpy(ln->client.name, client.name);
-            ln->client.age = client.age;
-        }  
-    }
 }
 
 void toRemove(List* list, int id)
