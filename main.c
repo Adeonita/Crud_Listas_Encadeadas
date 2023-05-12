@@ -51,7 +51,8 @@ void menu()
                 printf("Insira a nova idade do usuário: ");
                 scanf("%d", &client.age);
 
-                update(database, id, client);
+                getAndUpdate(database, id, client);
+                // update(database, id, client);
                 break;
 
             case 3:

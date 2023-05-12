@@ -60,8 +60,10 @@ void getAll(List* list)
     return;
 }
 
-void get(List* list, int id)
+ListNode* get(List* list, int id)
 {   
+    ListNode* node;
+
     for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
     {
         if (ln->client.id == id) {
@@ -70,8 +72,36 @@ void get(List* list, int id)
             printf("Nome: %s ", ln->client.name);
             printf("Idade: %d", ln->client.age);
             printf("\n\n");
+
+            node = ln;
         }  
     }
+
+    return node;
+}
+
+ListNode* getToUpdate(List* list, int id)
+{
+    ListNode* node;
+
+    for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
+    {
+        if (ln->client.id == id) {
+
+            node = ln;
+        }  
+    }
+
+    return node;
+}
+
+void getAndUpdate(List* list, int id, Client client)
+{
+    ListNode* node = getToUpdate(list, id);
+
+    node->client.id = id;
+    strcpy(node->client.name, client.name);
+    node->client.age = client.age;
 
     return;
 }
