@@ -2,34 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../helpers.h"
+#include "./helpers/helper.h"
+#include "struct.h"
 
 #define DATABASE "./database.txt"
-
-typedef struct list List;
-typedef struct client Client;
-typedef struct listNode ListNode;
-
-struct client
-{
-    int id;
-    int age;
-    char name[10];
-    int active;
-};
-
-struct list
-{
-    ListNode* first;
-    ListNode* last;
-    int totalElements;
-};
-
-struct listNode
-{
-    Client client;
-    ListNode* next;
-};
 
 List* create()
 {
@@ -85,7 +61,7 @@ void getAll(List* list)
 }
 
 void get(List* list, int id)
-{
+{   
     for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
     {
         if (ln->client.id == id) {
