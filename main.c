@@ -12,7 +12,7 @@ struct client
 {
     int id;
     int age;
-    char name[10]; //com array ta dando xabu na atualização
+    char name[10];
     int active;
 };
 
@@ -111,6 +111,26 @@ void update(List* list, int id, Client client)
     }
 }
 
+void delete(List* list, int id)
+{
+    ListNode* ant = NULL;
+    ListNode* actualElement = list->first;
+    
+    while (actualElement != NULL && actualElement->client.id != id)
+    {
+        ant = actualElement;
+        actualElement = actualElement->next;
+    }
+
+    if (ant == NULL) { 
+        list->first = actualElement->next;
+    } else {
+        ant->next = actualElement->next;
+    }
+
+    free(actualElement);
+}
+
 void save(List* list)
 {
 
@@ -149,7 +169,7 @@ void save(List* list)
     printWithLine("O registro foi armazenado no banco de dados!");
 }
 
-void loadFile(List *database)
+void loadFile(List* database)
 {
     FILE *fptr;
 
@@ -178,8 +198,6 @@ void loadFile(List *database)
 
     fclose(fptr);
 }
-
-
 
 void menu()
 {
@@ -256,7 +274,16 @@ void menu()
                 break;
 
             case 5:
-                // delete();
+                if (database->first == NULL)
+                {
+                    emptyDatabaseMessage("deletar");
+                    break;
+                }
+                
+                printf("Insira o id do usuário a ser deletado: ");
+                scanf("%d", &id);
+
+                delete(database, id);
                 break;  
 
             case 6:
