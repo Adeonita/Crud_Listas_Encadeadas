@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-
 #include "list/list.h"
 
 #define DATABASE "./database.txt"
