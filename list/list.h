@@ -2,6 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "../helpers.h"
+
+#define DATABASE "./database.txt"
+
 typedef struct list List;
 typedef struct client Client;
 typedef struct listNode ListNode;
@@ -38,8 +42,8 @@ List* create()
 
 void insert(List* list, Client client)
 {
-    ListNode *ant = NULL;
-    ListNode *first = list->first;
+    ListNode* ant = NULL;
+    ListNode* first = list->first;
     ListNode* node = (ListNode*) malloc(sizeof(ListNode));
     
 
@@ -126,4 +130,71 @@ void toRemove(List* list, int id)
     }
 
     free(actualElement);
+}
+
+void saveToFile(List* list)
+{
+    FILE* fptr;
+
+    fptr = fopen(DATABASE, "w");
+
+    if (fptr == NULL) {
+        if (fptr == NULL) {
+            notFound("File");
+            exit(1);
+        }
+        exit(1);
+    }
+
+    for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
+    {
+        printf("Id: %d ", ln->client.id);
+        printf("Nome: %s ", ln->client.name);
+        printf("Age: %d ", ln->client.age);
+        printf("Active: %d ", ln->client.active);
+        printf("\n");
+
+        if (ln->client.active == 1) {
+            fprintf(fptr, "%d %s %d %d \n",
+                ln->client.id, 
+                ln->client.name,
+                ln->client.age,
+                ln->client.active
+            );
+        }
+    }
+
+    fclose(fptr);
+
+    printWithLine("O registro foi armazenado no banco de dados!");
+}
+
+void loadFromFile(List* database)
+{
+    FILE* fptr;
+
+    fptr = fopen(DATABASE, "r");
+
+    if (fptr == NULL) {
+        notFound("File");
+        exit(1);
+    }
+
+    Client client;
+        
+    while ((fscanf(
+                fptr,
+                "%d %s %d %d\n",
+                &client.id, 
+                &client.name, 
+                &client.age, 
+                &client.active
+            )) != EOF)
+    {        
+        if (client.active == 1) {
+            insert(database, client);
+        }
+    }
+
+    fclose(fptr);
 }

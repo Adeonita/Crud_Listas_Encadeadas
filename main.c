@@ -1,78 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "helpers.h"
 #include "list/list.h"
 
 #define DATABASE "./database.txt"
-
-void save(List* list)
-{
-
-    FILE *fptr;
-
-    fptr = fopen(DATABASE, "w");
-
-    if (fptr == NULL) {
-        if (fptr == NULL) {
-            notFound("File");
-            exit(1);
-        }
-        exit(1);
-    }
-
-    for (ListNode* ln = list->first; ln != NULL; ln = ln->next)
-    {
-        printf("Id: %d ", ln->client.id);
-        printf("Nome: %s ", ln->client.name);
-        printf("Age: %d ", ln->client.age);
-        printf("Active: %d ", ln->client.active);
-        printf("\n");
-
-        if (ln->client.active == 1) {
-            fprintf(fptr, "%d %s %d %d \n",
-                ln->client.id, 
-                ln->client.name,
-                ln->client.age,
-                ln->client.active
-            );
-        }
-    }
-
-    fclose(fptr);
-
-    printWithLine("O registro foi armazenado no banco de dados!");
-}
-
-void loadFile(List* database)
-{
-    FILE *fptr;
-
-    fptr = fopen(DATABASE, "r");
-
-    if (fptr == NULL) {
-        notFound("File");
-        exit(1);
-    }
-
-    Client client;
-        
-    while ((fscanf(
-                fptr,
-                "%d %s %d %d\n",
-                &client.id, 
-                &client.name, 
-                &client.age, 
-                &client.active
-            )) != EOF)
-    {        
-        if (client.active == 1) {
-            insert(database, client);
-        }
-    }
-
-    fclose(fptr);
-}
 
 void menu()
 {
@@ -111,10 +42,10 @@ void menu()
                 printf("Insira o Id do usuário a ser atualizado: ");
                 scanf("%d", &id);
 
-                if (id < 0 || id > database->totalElements) {
+                if (id < 0 || id > database->totalElements -1 ) {
                     notFound("Id");
 
-                    break;;
+                    break;
                 }
                 
                 printf("Insira o novo nome do usuário: ");
@@ -158,6 +89,11 @@ void menu()
                 printf("Insira o id do usuário a ser deletado: ");
                 scanf("%d", &id);
 
+                if (id > database->totalElements - 1) {
+                    notFound("User");
+                    break;
+                }
+
                 toRemove(database, id);
                 break;  
 
@@ -165,16 +101,16 @@ void menu()
                 if (database->first == NULL) {
                     printWithLine("Não há registros para serem gravados no banco de dados");
                     
-                    break;;
+                    break;
                 }
 
-                save(database);
+                saveToFile(database);
                 break;
 
             case 7:
                 printWithLine("Carregando registros do banco de dados...");
 
-                loadFile(database);
+                loadFromFile(database);
                 
                 sleep(5);
                 printWithLine("Registros carregados em memória com sucesso!");
